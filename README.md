@@ -56,6 +56,6 @@ roslaunch rosbridge_server rosbridge_websocket.launch
 ```
 
 If you are adding this to an existing launch file, you can use
-```
-	<include file="/opt/ros/melodic/share/rosbridge_server/launch/rosbridge_websocket.launch" />
+```html
+<include file="/opt/ros/melodic/share/rosbridge_server/launch/rosbridge_websocket.launch" />
 ```
