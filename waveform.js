@@ -1,31 +1,55 @@
+
+
 // Audio
-var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+var audioCtx;
 var source;
 var stream;
 
 // Button
-var mute = document.getElementById('audio_mute_off');
+var mute;
 
 // Audio Nodes
-var analyser = audioCtx.createAnalyser();
-analyser.minDecibels = -90;
-analyser.maxDecibels = 90;
-analyser.smoothingTimeConstant = 0.1;
-
-var gainNode = audioCtx.createGain();
+var analyser;
+var gainNode;
 
 
 // Canvas
-var canvas = document.getElementById('audio_canvas');
-var canvasCtx = canvas.getContext("2d");
-var intendedWidth = document.getElementById('audio_wrapper').clientWidth;
-canvas.setAttribute('width', intendedWidth);
+var canvas;
+var canvasCtx;
+var intendedWidth;
 var drawAudio;
 
-// Audio Recording
-if (navigator.mediaDevices.getUserMedia) {
+function initAudio() {
+	initAudioNodes();
+	initAudioCanvas();
+	initAudioRecording();
+}
+
+function initAudioNodes() {
+	audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+	mute = document.getElementById('audio_mute_off');
+
+	analyser = audioCtx.createAnalyser();
+	analyser.minDecibels = -90;
+	analyser.maxDecibels = 90;
+	analyser.smoothingTimeConstant = 0.1;
+	
+	gainNode = audioCtx.createGain();
+}
+
+function initAudioCanvas() {
+	canvas = document.getElementById('audio_canvas');
+	canvasCtx = canvas.getContext("2d");
+	intendedWidth = document.getElementById('audio_wrapper').clientWidth;
+	canvas.setAttribute('width', intendedWidth);
+	drawAudio;
+}
+
+function initAudioRecording() {
+	// Audio Recording
+	if (navigator.mediaDevices.getUserMedia) {
 	console.log('getUserMedia supported.');
-	var constraints = { audio: true }
+	var constraints = { audio: true}
 	navigator.mediaDevices.getUserMedia(constraints)
 		.then(
 			function (stream) {
@@ -39,11 +63,26 @@ if (navigator.mediaDevices.getUserMedia) {
 				visualize();
 			})
 		.catch(function (err) { console.log('The following gUM error occured: ' + err); })
-} else {
+	} else {
 	console.log('getUserMedia not supported on your browser!');
+	}
+
+	mute.onclick = voiceMute;
 }
 
-mute.onclick = voiceMute;
+function resumeAudio() {
+
+	var uninitMsg = document.getElementById("audio_uninitalized");
+	var waveformView = document.getElementById("audio_canvas");
+	var waveforvmViewCtrl = document.getElementById("audio_canvas_controls");
+
+	audioCtx.resume().then(() => {
+		console.log('Playback resumed successfully');
+		uninitMsg.style.display = "none";
+		waveformView.style.display = "block";
+		waveforvmViewCtrl.style.display = "block";
+	  });
+}
 
 function voiceMuteActivate() {
 	console.log("muting")
@@ -52,6 +91,8 @@ function voiceMuteActivate() {
 	mute.innerHTML = "Unmute";
 	mute.activated = true;
 	mute.style.backgroundColor = "#ff3300"
+
+	resumeAudio();
 }
 
 function voiceMute() {
@@ -63,6 +104,8 @@ function voiceMute() {
 		mute.innerHTML = "Mute";
 		mute.activated = false;
 		mute.style.backgroundColor = "#0066cc"
+
+		resumeAudio();
 	}
 }
 

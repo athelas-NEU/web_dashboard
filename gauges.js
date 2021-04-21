@@ -21,15 +21,18 @@ SUBSCRIBERS_TOPIC_TYPE = "std_msgs/Float32MultiArray"
 
 var tempBoundaries = [95, 99, 101]
 var tempLabels = ['Low Temp', 'Average Temp', 'Possible Fever', 'Fever']
-var tempValues = "90:120:2.5"
+var tempValues = "70:120:2.5"
+const TEMP_OFFSET = 2;
 
 var pulseBoundaries = [60, 100, 130, 150]
 var pulseLabels = ['Bradycardia', 'Resting HR', 'Heavy HR', 'Exercising HR', 'HR Too Rapid']
 var pulseValues = "0:180:5.0"
+const PULSE_OFFSET = 0;
 
 var o2Boundaries = [90, 92, 94, 96]
-var o2Labels = ['Not Enough O2', 'Low O2', 'Medium-Low O2', 'Medium HR', 'Healthy O2']
+var o2Labels = ['Not Enough O2', 'Low O2', 'Medium-Low O2', 'Medium O2', 'Healthy O2']
 var o2Values = "0:100:2"
+const O2_OFFSET = 0;
 
 
 //////////////////////////////////////////////////////////////////////
@@ -44,19 +47,19 @@ function realTimeFeed(callback) {
 
 function feedTemp(callback) {
 	var tick = {};
-	tick.plot0 = Math.trunc(SUBSCRIBERS["temp"].data[0]);
+	tick.plot0 = Math.trunc(SUBSCRIBERS["temp"].data[0] + TEMP_OFFSET);
 	callback(JSON.stringify(tick));
 };
 
 function feedO2(callback) {
 	var tick = {};
-	tick.plot0 = Math.trunc(SUBSCRIBERS["o2"].data[0]);
+	tick.plot0 = Math.trunc(SUBSCRIBERS["o2"].data[0] + O2_OFFSET);
 	callback(JSON.stringify(tick));
 };
 
 function feedPulse(callback) {
 	var tick = {};
-	tick.plot0 = Math.trunc(SUBSCRIBERS["pulse"].data[0]);
+	tick.plot0 = Math.trunc(SUBSCRIBERS["pulse"].data[0] + PULSE_OFFSET);
 	callback(JSON.stringify(tick));
 };
 

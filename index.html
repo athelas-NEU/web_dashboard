@@ -18,6 +18,9 @@
 
 	<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 
+	<link href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/tabulator.min.css" rel="stylesheet">
+	<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"></script>
+
 
 </head>
 
@@ -44,11 +47,11 @@
 		<div class="col-xs-2 col-md-6">
 			<div class="radio-toolbar">
 				<input type="radio" id="sensorSelect_Seth" name="sensorSelect" value="stethoscope"
-					onclick="onClick_sensorSelect('audio');" checked>
+					onclick="onClick_sensorSelect('audio');">
 				<label for="sensorSelect_Seth">Stethoscope</label>
 
 				<input type="radio" id="sensorSelect_Temp" name="sensorSelect" value="temp"
-					onclick="onClick_sensorSelect('temp');">
+					onclick="onClick_sensorSelect('temp');" checked>
 				<label for="sensorSelect_Temp">Temperature</label>
 
 				<input type="radio" id="sensorSelect_Heart" name="sensorSelect" value="pulse"
@@ -71,29 +74,35 @@
 				<h2 style="color:black">Command Arm:</h2>
 			</label>
 
-			
+
 		</div>
 
 		<div class="col-xs-2 col-md-6">
-			<button type="button" style="border-radius: 4px;padding: 10px 20px;color:black;background-color:#33cc33; border: 2px solid #000000;" name="command_RunTest"
-				id="command_RunTest" onclick="onClick_RunTest();" class="btn btn-primary" btn-lg btn-block">Start Test</button>
+			<button type="button"
+				style="border-radius: 4px;padding: 10px 20px;color:black;background-color:#33cc33; border: 2px solid #000000;"
+				name="command_RunTest" id="command_RunTest" onclick="onClick_RunTest();" class="btn btn-primary" btn-lg
+				btn-block">Start Test</button>
 
-			<button type="button" style="border-radius: 4px;padding: 10px 20px;color:black;background-color:#0066cc; border: 2px solid #000000;" name="command_ReturnToHome" id="command_ReturnToHome"
-				onclick="onClick_ReturnHome();" class="btn btn-primary" btn-lg btn-block">Reset Arm</button>
+			<button type="button"
+				style="border-radius: 4px;padding: 10px 20px;color:black;background-color:#0066cc; border: 2px solid #000000;"
+				name="command_ReturnToHome" id="command_ReturnToHome" onclick="onClick_ReturnHome();"
+				class="btn btn-primary" btn-lg btn-block">Reset Arm</button>
 
-			<button type="button" style="border-radius: 4px;padding: 10px 20px;color:black;background-color:#ff3300; border: 2px solid #000000;" name="command_Halt" id="command_Halt"
-				onclick="onClick_Halt();" class="btn btn-primary" btn-lg btn-block">Stop Arm</button>
+			<button type="button"
+				style="border-radius: 4px;padding: 10px 20px;color:black;background-color:#ff3300; border: 2px solid #000000;"
+				name="command_Halt" id="command_Halt" onclick="onClick_Halt();" class="btn btn-primary" btn-lg
+				btn-block">Stop Arm</button>
 		</div>
 
 		<div class="w-100"></div>
 		<div class="col-xs-2 col-md-2"></div>
-		<div class="col-xs-2 col-md-4">
-			<h4 id="lastCmdLabel" style="color:grey"><em>[last command]</em></h4>
+		<div class="col">
+			<h4 id="stateLabel" style="color:grey"><em>[instructions]</em></h4>
 		</div>
 	</div>
 
 	<div class="row my-4">
-		
+
 	</div>
 
 	<!-- Vizualizing -->
@@ -123,9 +132,19 @@
 				<h2 style="color:black">Stethoscope Audio</h2>
 			</header>
 
-			<canvas id="audio_canvas" class="visualizer" width="640" height="100"></canvas>
+			<div id="audio_uninitalized">
+				<header>
+					<h4 style="color:black">Please listen to the system speaker.</h4>
+				</header>
+
+				<!-- <button type="button" style="border-radius: 4px;padding: 10px 20px;color:black;background-color:#ff3300; border: 2px solid #000000;" name="refresh_Audio" id="refresh_Audio"
+				onclick="resumeAudio();" class="btn btn-primary" btn-lg btn-block">Refresh Connection</button> -->
+
+			</div>
+
+			<canvas id="audio_canvas" class="visualizer" width="640" height="100" style="display:none"></canvas>
 			<br>
-			<form class="controls">
+			<form class="controls" style="display:none" id="audio_canvas_controls">
 				<div>
 					<ctrl_btn id="audio_mute_off" class="mute" :activated>Mute</ctrl_btn>
 				</div>
@@ -134,8 +153,26 @@
 			<br>
 		</div>
 		<div class="col-xs-2 col-md-2"></div>
-		
+
 	</div>
+
+	<div class="row my-4">
+		<div class="col-md-2"></div>
+		<header>
+			<h2 style="color:black">Command History</h2>
+		</header>
+		<div class="col-md-2"></div>
+	</div>
+
+	<div class="row my-4">
+		<div class="col-md-2"></div>
+		<div class="col-md-8">
+			<div id="command-history"></div>
+		</div>
+		<div class="col-md-2"></div>
+
+	</div>
+
 
 	<!-- INFO -->
 	<div class="row my-4">
@@ -177,8 +214,9 @@
 	<script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
 	<script src="https://static.robotwebtools.org/keyboardteleopjs/current/keyboardteleop.min.js"></script>
 
-	<script src="waveform.js"></script>
+	<!-- <script src="waveform.js"></script> -->
 	<script src="gauges.js"></script>
+
 	<script src="control.js"></script>
 
 
