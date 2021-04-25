@@ -59,3 +59,9 @@ If you are adding this to an existing launch file, you can use
 ```html
 <include file="/opt/ros/melodic/share/rosbridge_server/launch/rosbridge_websocket.launch" />
 ```
+
+If you are a use, connect to the same wifi as the Jetson and go to the IP address of the Jetson with any web browser (Chrome is recommended)
+
+# References
+
+https://medium.com/husarion-blog/bootstrap-4-ros-creating-a-web-ui-for-your-robot-9a77a8e373f9
